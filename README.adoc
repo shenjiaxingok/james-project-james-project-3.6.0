@@ -1,0 +1,495 @@
+Apache James Project
+====================
+
+link:https://gitter.im/apache/james-project[image:https://badges.gitter.im/apache/james-project.svg[Join the chat at link:https://gitter.im/apache/james-project]]
+
+image::james-logo.png[James logo]
+
+== What is James?
+
+*James* stands for *Java Apache Mail Enterprise Server!*
+
+It has a modular architecture based on a rich set of *modern* and *efficient* components which provides at the end
+*complete, stable, secure and extendable Mail Servers running on the JVM*.
+
+Create your *own personal solution* for emails treatment by assembling the components you need thanks to the Inversion
+of Control mail platform offered and  go further customizing filtering and routing rules using *James Mailet Container*.
+
+Supported protocols are: IMAP, SMTP, JMAP, POP3 and more...
+
+Read more on https://james.apache.org/[our website].
+
+== How to contribute?
+
+James is a project that lives from the contributions of its community! Anyone can contribute!
+
+Read the https://james.apache.org/contribute.html[contributing guidelines].
+
+We more than welcome *articles* and *blog posts* about James. Contact us by https://james.apache.org/mail.html[email]
+or on https://gitter.im/apache/james-project[Gitter] to share your experiences.
+
+*Documentation* is an easy way to get started, and more than wanted! Check out the https://issues.apache.org/jira/issues/?jql=project%20%3D%20JAMES%20AND%20resolution%20%3D%20Unresolved%20AND%20labels%20%3D%20documentation%20ORDER%20BY%20priority%20DESC%2C%20updated%20DESC[~documentation] label on JIRA.
+
+And to get started with *code contributions*, search out the
+https://issues.apache.org/jira/issues/?jql=project%20%3D%20JAMES%20AND%20resolution%20%3D%20Unresolved%20AND%20labels%20%3D%20newbie%20ORDER%20BY%20priority%20DESC%2C%20updated%20DESC[~newbie],
+https://issues.apache.org/jira/issues/?jql=project%20%3D%20JAMES%20AND%20resolution%20%3D%20Unresolved%20AND%20labels%20%3D%20easyfix%20ORDER%20BY%20priority%20DESC%2C%20updated%20DESC[~easyfix],
+https://issues.apache.org/jira/issues/?jql=project%20%3D%20JAMES%20AND%20resolution%20%3D%20Unresolved%20AND%20labels%20%3D%20feature%20ORDER%20BY%20priority%20DESC%2C%20updated%20DESC[~feature] labels on JIRA.
+
+There is many other ways one can help us: packaging, communication, etc ...
+
+= How to...
+
+ * link:#how-to-try-james[How to try James]
+ * link:#how-to-check-the-compilation[How to check the compilation]
+ * link:#how-to-run-james-in-docker[How to run James in Docker]
+ ** link:#run-james-with-guice-%2Dcassandra-%2Drabbitmq-%2Ds3-%2Delasticsearch[Run James with Guice + Cassandra + RabbitMQ + S3 + ElasticSearch]
+ ** link:#run-james-with-guice-%2Dcassandra-%2Delasticsearch[Run James with Guice + Cassandra + ElasticSearch]
+ ** link:#run-james-with-guice-%2Djpa-%2Dlucene[Run James with Guice + JPA + Lucene]
+ ** link:#run-james-with-spring-%2Djpa[Run James with Spring + JPA]
+ * link:#other-useful-commands[Other Useful commands]
+ ** link:#how-to-add-a-domain-[How to add a domain?]
+ ** link:#how-to-add-a-user-[How to add a user?]
+ ** link:#how-to-manage-sieve-scripts-[How to manage SIEVE scripts?]
+ ** link:#how-to-retrieve-users-and-password-from-my-previous-container[How to retrieve users and password from my previous container?]
+ * link:#develop-on-james[Develop on James]
+ ** link:#how-to-run-deployment-tests[How to run deployment Tests]
+ ** link:#how-to-check-the-merge-of-a-commit[How to check the merge of a commit]
+ * link:#generating-a-package-for-james[Generating a package for James]
+ * link:#know-more-about-james-design[Know more about James design]
+ * link:#articles-for-james-community[Articles for James community]
+ ** link:#how-to-build-and-publish-the-website[How to build and publish the website]
+ ** link:#how-to-release-via-maven-release-plugin[How to release via maven release plugin]
+
+== How to try James
+
+Requirements: docker & docker-compose installed.
+
+When you try James this way, you will use the most current state of James.
+It will be configured to run with Cassandra & ElasticSearch.
+All those three components will be started with a single command.
+
+You can retrieve the docker-compose file :
+
+    $ wget https://raw.githubusercontent.com/apache/james-project/master/dockerfiles/run/docker-compose.yml
+
+Then, you just have to start the services:
+
+    $ docker-compose up
+
+Wait a few seconds in order to have all those services start up. You will see the following log when James is available:
+james           | Started : true
+
+A default domain, james.local, has been created. You can see this by running:
+
+    $ docker exec james java -jar /root/james-cli.jar -h 127.0.0.1 -p 9999 listdomains
+
+James will respond to IMAP port 143 and SMTP port 25.
+You have to create users before playing with james. You may also want to create other domains.
+Follow the 'Useful commands' section for more information about James CLI.
+
+
+== How to check the compilation
+
+In order to have a standard compilation environment, we introduce Dockerfiles, using java-11.
+
+=== Java 11
+
+First step, you have to build the Docker image
+
+    $ docker build -t james/project dockerfiles/compilation/java-11
+
+In order to run the build, you have to launch the following command:
+
+    $ docker run -v $PWD/.m2:/root/.m2 -v $PWD:/origin -t james/project -s SHA1
+
+Where:
+
+- $PWD/.m2:/root/.m2: is the first volume used to share the maven repository,
+as we don't want to download all dependencies on each build
+
+- SHA1 (optional): is the given git SHA1 of the james-project repository to build or master if none.
+- -s option: given tests will not be played while building. Not specifying means play tests.
+
+To retrieve compiled artifacts, one might mount these volumes:
+
+- --volume $PWD/dockerfiles/run/spring/destination:/spring/destination : is the volume used to get the compiled elements for Spring packaging.
+- --volume $PWD/dockerfiles/run/guice/cassandra/destination:/cassandra/destination : is the volume used to get the compiled elements for Guice Cassandra packaging and Cassandra-LDAP packaging.
+- --volume $PWD/dockerfiles/run/guice/jpa/destination:/jpa/destination : is the volume used to get the compiled elements for Guice JPA packaging.
+- --volume $PWD/swagger:/swagger : is the volume used to get the swagger json files for webadmin documentation.
+
+Some tests needs a DOCKER_HOST environment variable in order to be played, they will be ignored if you don't provide this variable.
+If you wish to play them, you may use a command like the following (depending on your docker configuration):
+
+    $ docker run --env DOCKER_HOST=tcp://172.17.0.1:2376 -v $PWD/.m2:/root/.m2 -v $PWD:/origin -v $PWD/dockerfiles/run/spring/destination:/destination -t james/project SHA1
+
+If you are using a a fresh installation of Docker, your DOCKER_HOST should be unix:///var/run/docker.sock and you should mount this socket as a volume:
+
+    $ docker run --env DOCKER_HOST=unix:///var/run/docker.sock -v /var/run/docker.sock:/var/run/docker.sock -v $PWD/.m2:/root/.m2 -v $PWD:/origin -v $PWD/dockerfiles/run/spring/destination:/destination -t james/project SHA1
+
+
+== How to run James in Docker
+
+This feature is available for three configurations :
+
+ * link:#run-james-with-guice-%2Dcassandra-%2Drabbitmq-%2Ds3-%2Delasticsearch[Guice + Cassandra + RabbitMQ + S3 + ElasticSearch]
+ * link:#run-james-with-guice-%2Dcassandra-%2Delasticsearch[Guice + Cassandra + ElasticSearch]
+ * link:#run-james-with-guice-%2Djpa-%2Dlucene[Guice + JPA + Lucene]
+ * link:#run-james-with-spring-%2Djpa[Spring + JPA]
+
+
+=== Run James with Guice + Cassandra + RabbitMQ + S3 + ElasticSearch
+
+
+==== Requirements
+Built artifacts should be in ./dockerfiles/run/guice/cassandra-rabbitmq/destination folder for cassandra.
+If you haven't already:
+
+    $ docker build -t james/project dockerfiles/compilation/java-11
+    $ docker run -v $HOME/.m2:/root/.m2 -v $PWD:/origin \
+  -v $PWD/dockerfiles/run/guice/cassandra-rabbitmq/destination:/cassandra-rabbitmq/destination \
+  -t james/project -s HEAD
+
+
+==== How to ?
+You need a running *cassandra* in docker. To achieve this run:
+
+    $ docker run -d --name=cassandra cassandra:3.11.10
+
+You need a running *rabbitmq* in docker. To achieve this run:
+
+    $ docker run -d --name=rabbitmq rabbitmq:3.8.1-management
+
+You need a running *s3* compatible objectstorage in docker. To achieve this run:
+
+    $ docker run -d --env 'REMOTE_MANAGEMENT_DISABLE=1' --env 'SCALITY_ACCESS_KEY_ID=accessKey1' --env 'SCALITY_SECRET_ACCESS_KEY=secretKey1' --name=s3 zenko/cloudserver:8.2.6
+
+You need a running *ElasticSearch* in docker. To achieve this run:
+
+    $ docker run -d --name=elasticsearch --env 'discovery.type=single-node' docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+
+If you want to handle attachment text extraction before indexing in ElasticSearch (this makes attachments searchable)
+and if you want to use all the JMAP search capabilities, you also need to start *Tika*.
+See http://james.apache.org/server/config-elasticsearch.html#Tika_Configuration[Tika configuration documentation] for more info.
+
+    $ docker run -d --name=tika apache/tika:1.24
+
+We need to provide the key we will use for TLS. For obvious reasons, this is not provided in this git.
+
+Copy your TLS keys to `run/guice/cassandra-rabbitmq/destination/conf/keystore` or generate it using the following command. The password must be `james72laBalle` to match default configuration.
+
+    $ keytool -genkey -alias james -keyalg RSA -keystore dockerfiles/run/guice/cassandra-rabbitmq/destination/conf/keystore
+
+Then we need to build james container :
+
+    $ docker build -t james_run dockerfiles/run/guice/cassandra-rabbitmq
+
+To run this container :
+
+    $ docker run --hostname HOSTNAME -p "25:25" -p 80:80 -p "110:110" -p "143:143" -p "465:465" -p "587:587" -p "993:993" -p "127.0.0.1:8000:8000" --link cassandra:cassandra --link rabbitmq:rabbitmq
+   --link elasticsearch:elasticsearch --link tika:tika --link s3:s3.docker.test --name james_run -t james_run
+
+Where :
+
+- HOSTNAME is the hostname you want to give to your James container. This DNS entry will be used to send mail to your James server.
+- link to tika is only needed if you started tika earlier.
+
+Webadmin port binding is restricted to loopback as users are not authenticated by default on webadmin server. Thus you should avoid exposing it in production.
+Note that the above example assumes `127.0.0.1` is your loopback interface for convenience but you should change it if this is not the case on your machine.
+
+If you want to pass additional options to the underlying java command, you can configure a _JVM_OPTIONS_ env variable, for example add:
+
+    --env JVM_OPTIONS="-Xms256m -Xmx2048m"
+
+To have log file accessible on a volume, add *-v  $PWD/logs:/logs* option to the above command line, where *$PWD/logs* is your local directory to put files in.
+
+==== Instrumentation
+You can use Glowroot to instrumentalize James. The provided guice docker files allow a simple way to do it.
+In order to activate Glowroot you need to run the container with the environment variable _GLOWROOT_ACTIVATED_ set to _true_
+and to expose the glowroot instrumentation ui port.
+
+    --env GLOWROOT_ACTIVATED=true -p "4000:4000"
+
+By default, the Glowroot UI is accessible from every machines in the network as defined in the _destination/admin.json_.
+Which you could configure before building the image, if you want to restrict its accessibility to localhost for example.
+See the https://github.com/glowroot/glowroot/wiki/Agent-Installation-(with-Embedded-Collector)#user-content-optional-post-installation-steps[Glowroot post installation steps]  for more details.
+
+Or by mapping the 4000 port to the IP of the desired network interface, for example `-p 127.0.0.1:4000:4000`.
+
+
+
+=== Run James with Guice + Cassandra + ElasticSearch
+
+
+==== Requirements
+Built artifacts should be in ./dockerfiles/run/guice/cassandra/destination folder for cassandra.
+If you haven't already:
+
+    $ docker build -t james/project dockerfiles/compilation/java-11
+    $ docker run -v $HOME/.m2:/root/.m2 -v $PWD:/origin \
+  -v $PWD/dockerfiles/run/guice/cassandra/destination:/cassandra/destination \
+  -t james/project -s HEAD
+
+
+==== How to ?
+You need a running *cassandra* in docker. To achieve this run:
+
+    $ docker run -d --name=cassandra cassandra:3.11.10
+
+You need a running *ElasticSearch* in docker. To achieve this run:
+
+    $ docker run -d --name=elasticsearch --env 'discovery.type=single-node' docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+
+If you want to handle attachment text extraction before indexing in ElasticSearch (this makes attachments searchable)
+and if you want to use all the JMAP search capabilities, you also need to start *Tika*.
+See http://james.apache.org/server/config-elasticsearch.html#Tika_Configuration[Tika configuration documentation] for more info.
+
+    $ docker run -d --name=tika apache/tika:1.24
+
+We need to provide the key we will use for TLS. For obvious reasons, this is not provided in this git.
+
+Copy your TLS keys to `run/guice/cassandra/destination/conf/keystore` or generate it using the following command. The password must be `james72laBalle` to match default configuration.
+
+    $ keytool -genkey -alias james -keyalg RSA -keystore dockerfiles/run/guice/cassandra/destination/conf/keystore
+
+Then we need to build james container :
+
+    $ docker build -t james_run dockerfiles/run/guice/cassandra
+
+To run this container :
+
+    $ docker run --hostname HOSTNAME -p "25:25" -p 80:80 -p "110:110" -p "143:143" -p "465:465" -p "587:587" -p "993:993" -p "127.0.0.1:8000:8000" --link cassandra:cassandra --link elasticsearch:elasticsearch --link tika:tika --name james_run -t james_run
+
+Where :
+
+- HOSTNAME is the hostname you want to give to your James container. This DNS entry will be used to send mail to your James server.
+- link to tika is only needed if you started tika earlier.
+
+Webadmin port binding is restricted to loopback as users are not authenticated by default on webadmin server. Thus you should avoid exposing it in production.
+Note that the above example assumes `127.0.0.1` is your loopback interface for convenience but you should change it if this is not the case on your machine.
+
+To have log file accessible on a volume, add *-v  $PWD/logs:/logs* option to the above command line, where *$PWD/logs* is your local directory to put files in.
+
+=== Run James with Guice + JPA + Lucene
+
+==== Requirements
+Built artifacts should be in ./dockerfiles/run/guice/jpa/destination folder for jpa.
+If you haven't already:
+
+    $ docker build -t james/project dockerfiles/compilation/java-11
+    $ docker run -v $HOME/.m2:/root/.m2 -v $PWD:/origin \
+  -v $PWD/dockerfiles/run/guice/jpa/destination:/jpa/destination \
+  -t james/project -s HEAD
+
+
+==== How to ?
+We need to provide the key we will use for TLS. For obvious reasons, this is not provided in this git.
+
+Copy your TLS keys to `run/guice/jpa/destination/conf/keystore` or generate it using the following command. The password must be `james72laBalle` to match default configuration.
+
+    $ keytool -genkey -alias james -keyalg RSA -keystore dockerfiles/run/guice/jpa/destination/conf/keystore
+
+
+Then we need to build james container :
+
+    $ docker build -t james_run dockerfiles/run/guice/jpa
+
+To run this container :
+
+    $ docker run --hostname HOSTNAME -p "25:25" -p 80:80 -p "110:110" -p "143:143" -p "465:465" -p "587:587" -p "993:993" -p "127.0.0.1:8000:8000" --name james_run -t james_run
+
+HOSTNAME is the hostname you want to give to your James container. This DNS entry will be used to send mail to your James server.
+
+Webadmin port binding is restricted to loopback as users are not authenticated by default on webadmin server. Thus you should avoid exposing it in production.
+Note that the above example assumes `127.0.0.1` is your loopback interface for convenience but you should change it if this is not the case on your machine.
+
+To have log file accessible on a volume, add *-v  $PWD/logs:/logs* option to the above command line, where *$PWD/logs* is your local directory to put files in.
+
+
+=== Run James with Spring + JPA
+
+==== Requirements
+
+Built artifacts should be in ./dockerfiles/run/spring/destination folder for Spring.
+If you haven't already:
+
+    $ docker build -t james/project dockerfiles/compilation/java-11
+    $ docker run -v $HOME/.m2:/root/.m2 -v $PWD:/origin \
+  -v $PWD/dockerfiles/run/spring/destination:/spring/destination \
+  -t james/project -s HEAD
+
+
+==== Howto ?
+
+We need to provide the key we will use for TLS. For obvious reasons, this is not provided in this git.
+
+Copy your TSL keys to destination/run/spring/conf/keystore or generate it using the following command. The password must be james72laBalle to match default configuration.
+
+    $ keytool -genkey -alias james -keyalg RSA -keystore dockerfiles/run/spring/destination/conf/keystore
+
+Then we need to build james container :
+
+    $ docker build -t james_run dockerfiles/run/spring/
+
+The provisioned james images bases on pre-build james server which is "linagora/james-project-spring-jpa". If we need to build james container with the default initial data (initial domain: james.local and initial users: user01, user02, user03):
+
+    $ docker build -t james_run dockerfiles/run/spring/provisioned/
+
+To run this container :
+
+    $ docker run --hostname HOSTNAME -p "25:25" -p "110:110" -p "143:143" -p "465:465" -p "587:587" -p "993:993" --name james_run -t james_run
+
+Where HOSTNAME is the hostname you want to give to your James container. This DNS entry will be used to send mail to your James server.
+
+
+== Other Useful commands
+
+The base command is different whether you choose guice flavor or spring :
+
+  * guice use : `docker exec james_run java -jar /root/james-cli.jar`
+  * spring use : `docker exec james_run /root/james-server-app-3.0.0-beta6-SNAPSHOT/bin/james-cli.sh`
+
+=== How to add a domain ?
+
+    # Add DOMAIN to 127.0.0.1 in your host /etc/hosts
+    $ <your-command-here> -h 127.0.0.1 -p 9999 adddomain DOMAIN
+
+DOMAIN: is the domain you want to add.
+
+Note: Using docker, one can add an environment variable holding the domain to be created. This
+domain will be created upon James start:
+
+    $ --environment DOMAIN=domain.tld
+
+=== How to add a user ?
+
+    $ <your-command-here> -h 127.0.0.1 -p 9999 adduser USER_MAIL_ADDRESS PASSWORD
+
+Where :
+
+* USER_MAIL_ADDRESS: is the mail address that will be used by this user.
+* PASSWORD: is the password that will be used by this user.
+
+You can then just add DOMAIN to your /etc/hosts and you can connect to your james account with for instance Thunderbird.
+
+=== How to manage SIEVE scripts ?
+
+Each user can manage his SIEVE scripts through the manage SIEVE mailet.
+
+To use the manage SIEVE mailet :
+
+ * You need to create the user sievemanager@DOMAIN ( if you don't, the SMTP server will check the domain, recognize it, and look for an absent local user, and will generate an error ).
+ * You can send Manage Sieve commands by mail to sievemanager@DOMAIN. Your subject must contain the command. Scripts needs to be added as attachments and need the ".sieve" extension.
+
+To activate a script for a user, you need the following combination :
+
+ * PUTSCRIPT scriptname
+ * SETACTIVE scriptname
+
+=== How to retrieve users and password from my previous container
+
+Some james data (those non related to mailbox, eg : mail queue, domains, users, rrt, SIEVE scripts, mail repositories ) are not yet supported by our Cassandra implementation.
+
+To keep these data when you run a new container, you can mount the following volume :
+
+ -v /root/james-server-app-3.0.0-beta6-SNAPSHOT/var:WORKDIR/destination/var
+
+Where :
+
+* WORKDIR: is the absolute path to your james-parent workdir.
+
+Beware : you will have concurrency issues if multiple containers are running on this single volume.
+
+== Develop on James
+
+James requires at least JDK 11 and Maven 3.6.0 to build.
+Some parts of James are written in Scala so one might need to enable Scala plugin in IDE.
+
+=== How to run deployment Tests
+
+We wrote some MPT (James' Mail Protocols Tests subproject) deployment tests to validate a James
+deployment.
+
+It uses the External-James module, that uses environment variables to locate a remote
+IMAP server and run integration tests against it.
+
+For that, the target James Server needs to be configured with a domain domain and a user imapuser
+with password password. Read above documentation to see how you can do this.
+
+You have to run MPT tests inside docker. As you need to use maven, the simplest option is to
+use james/parent image, and override the entry point ( as git and maven are already configured
+there ) :
+
+    $ docker run -t --entrypoint="/root/integration_tests.sh" -v $PWD/.m2:/root/.m2 -v $PWD:/origin james/project JAMES_IP JAMES_PORT SHA1
+
+Where :
+
+* JAMES_IP: IP address or DNS entry for your James server
+* JAMES_PORT: Port allocated to James' IMAP port (should be 143).
+* SHA1(optional): Branch to use in order to build integration tests or master if none.
+
+=== How to check the merge of a commit
+
+First step, you have to build the Docker image
+
+    $ docker build -t james/merge dockerfiles/merge
+
+In order to run the build, you have to launch the following command:
+
+    $ docker run -v $PWD:/origin -t james/merge SHA1 RESULTING_BRANCH
+
+Where :
+
+- SHA1: is the given git SHA1 of the james-project repository to merge.
+- RESULTING_BRANCH: is the branch created when merging.
+
+== Generating a package for James
+
+You can generate a deb package and an RPM package for James by using the following process.
+
+First step, you have to build the Docker image used to generate the package
+
+    $ docker build -t build-james-packages \
+        --build-arg RELEASE=3.2.0 \
+        --build-arg ITERATION=1 \
+        --build-arg BASE=linagora/james-project \
+        --build-arg BASE_LDAP=linagora/james-ldap-project \
+        --build-arg BASE_RABBITMQ=linagora/james-rabbitmq-project \
+        --build-arg TAG=latest \
+        dockerfiles/packaging/guice/cassandra
+
+Where:
+
+- ITERATION is the release number used after the last hyphen (e.g. 3.0.1, 3.1.0, 3.2.0...)
+- BASE is the image jar and executable are copied from. Defaults to linagora/james-project
+- BASE_LDAP is the image jar and executable are copied from for a deployment with an LDAP user repository. Defaults to linagora/james-ldap-project
+- BASE_RABBITMQ is the image jar and executable are copied from for a deployment of linagora/james-project + RabbitMQ + S3 BlobStore.
+Defaults to linagora/james-rabbitmq-project
+- TAG is the tag of these docker images. Defaults to latest.
+
+Then, you have to run the container:
+
+    $ docker run --name james-packages -v $PWD/result:/result build-james-packages
+
+Where:
+
+- $PWD/result is the folder where the deb and the RPM packages will be copied
+
+Note: A helper script is provided for the generation of packages for a specific git commit. For instance:
+
+    $ sh dockerfiles/packaging/guice/cassandra/package.sh 3.2.0 1 c298195e84 $PWD/result
+
+The generated package allow you to choose between a deployment with or without LDAP using update-alternatives.
+Once installed, try:
+
+    $ update-alternatives --config james
+
+By default James is configured without LDAP support.
+
+== Know more about James design
+
+James comes with a https://james.apache.org/documentation.html[Documentation] and https://github.com/linagora/james-project/tree/master/src/adr[Architectural Decision Records].
+
+== Articles for James community
+
+* link:docs/modules/community/pages/website.adoc[How to build and publish the website]
+* link:docs/modules/community/pages/release.adoc[How to release via maven release plugin]

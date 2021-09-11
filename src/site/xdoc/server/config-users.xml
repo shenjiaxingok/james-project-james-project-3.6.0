@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<document>
+
+ <properties>
+  <title>Apache James Server 3 - Users Configuration</title>
+ </properties>
+
+<body>
+
+  <section name="Users Repositories">
+
+    <subsection name="Introduction">
+
+      <p>User repositories are required to store James user information and authentication data</p>
+
+      <p>Consult <a href="https://github.com/apache/james-project/tree/master/server/app/src/main/resources/usersrepository.xml">usersrepository.xml</a> in GIT to get some examples and hints.</p>
+
+      <p>
+        A user has two attributes: username and password. A valid user should satisfy these criteria:
+      </p>
+      <ul>
+        <li>username and password cannot be null or empty</li>
+        <li>username should not be longer than 255 characters</li>
+        <li>username can not contain '/'</li>
+        <li>username can not contain multiple domain delimiter('@')</li>
+        <li>A username can have only a local part when virtualHosting is disabled. E.g.'myUser'</li>
+        <li>
+            When virtualHosting is enabled, a username should have a domain part,
+            and the domain part should be concatenated after a domain delimiter('@'). E.g. 'myuser@james.org'
+        </li>
+      </ul>
+      <p>
+        A user is always considered as lower cased, so 'myUser' and 'myuser' are the same user, and can be used as well as recipient local part than as login for different protocols.
+      </p>
+    </subsection>
+
+    <subsection name="General configuration">
+
+      <p>All Users Repositories provide at least these two options</p>
+
+      <dl>
+        <dt><strong>enableVirtualHosting</strong></dt>
+        <dd>true or false. Add domain support for users (default: false, except for Cassandra Users Repository)</dd>
+        <dt><strong>administratorId</strong></dt>
+        <dd>user's name. Allow a user to access to the <a href="https://tools.ietf.org/html/rfc4616#section-2">impersonation command</a>, acting on the behalf of any user.</dd>
+      </dl>
+
+    </subsection>
+
+    <subsection name="JPA Users Repository">
+
+     <p>JPA (database via OpenJPA) based user repository. This is the default implementation.</p>
+
+     <p>The usersrepository tag as 2 attributes: name="LocalUsers" and class="org.apache.james.user.file.UsersFileRepository">
+     The class tag should be specified for Spring, but is not taken into acount by Guice.</p>
+
+
+      <dl>
+        <dt><strong>algorithm</strong></dt>
+        <dd>Algorithm to hash passwords. Supported password algorithm are: MD5, SHA-256, SHA-512, NONE(then SHA-1 will be used).</dd>
+        <dd>MD5 and SHA-1 are deprecated.</dd>
+        <dt><strong>enableVirtualHosting</strong></dt>
+        <dd>true (default) or false. Defines if the usernames must (true) or may not contain (false) a domain part (user@domain.tld).</dd>
+      </dl>
+
+    </subsection>
+
+    <subsection name="LDAP Users Repository">
+
+       <p>Read-Only LDAP based UsersRepository</p>
+
+       <p>Example:</p>
+
+       <source>
+&lt;repository name="LocalUsers" class="org.apache.james.user.ldap.ReadOnlyUsersLDAPRepository" ldapHost="ldap://myldapserver:389"
+    principal="uid=ldapUser,ou=system" credentials="password" userBase="ou=People,o=myorg.com,ou=system" userIdAttribute="uid"/&gt;</source>
+
+     </subsection>
+
+  </section>
+
+</body>
+
+</document>

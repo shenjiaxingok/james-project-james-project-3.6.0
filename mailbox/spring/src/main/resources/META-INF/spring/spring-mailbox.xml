@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.    
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="messageIdFactory" class="org.apache.james.mailbox.store.mail.model.DefaultMessageId.Factory" />
+    <!--
+      Mailbox Managers
+     -->
+
+    <import resource="classpath:META-INF/spring/mailbox-locker.xml"/>
+    <import resource="classpath:META-INF/spring/mailbox-jpa.xml"/>
+
+    <import resource="classpath:META-INF/spring/mailbox-index-lucene.xml" />
+<!--    <import resource="classpath:META-INF/spring/mailbox-elasticsearch.xml"/> -->
+
+    <import resource="classpath:META-INF/spring/mailbox-maildir.xml"/>
+    <import resource="classpath:META-INF/spring/mailbox-memory.xml"/>
+
+    <!-- 
+      Mailbox Copier
+     -->
+    <bean id="mailboxcopier" class="org.apache.james.mailbox.tools.copier.MailboxCopierImpl"/>
+
+    <!-- 
+      Mailbox ACL Resolver
+     -->
+    <bean id="aclResolver" class="org.apache.james.mailbox.acl.UnionMailboxACLResolver"/>
+    <!-- 
+      Group Membership Resolver
+     -->
+    <bean id="groupMembershipResolver" class="org.apache.james.mailbox.acl.SimpleGroupMembershipResolver"/>
+    <!--
+      Attachments
+     -->
+    <bean id="messageParser" class="org.apache.james.mailbox.store.mail.model.impl.MessageParser"/>
+
+    <bean id="storeMailboxAnnotationManager" class="org.apache.james.mailbox.store.StoreMailboxAnnotationManager">
+        <constructor-arg index="0" ref="messageMapperFactory" />
+        <constructor-arg index="1" ref="storeRightManager" />
+    </bean>
+
+    <bean id="storeRightManager" class="org.apache.james.mailbox.store.StoreRightManager" >
+        <constructor-arg index="0" ref="messageMapperFactory" />
+        <constructor-arg index="1" ref="aclResolver" />
+        <constructor-arg index="2" ref="groupMembershipResolver" />
+        <constructor-arg index="3" ref="event-bus" />
+    </bean>
+
+    <bean id="sessionProvider" class="org.apache.james.mailbox.store.SessionProviderImpl" >
+        <constructor-arg index="0" ref="authenticator" />
+        <constructor-arg index="1" ref="authorizator" />
+    </bean>
+
+    <bean id="mailbox-init" class="org.apache.james.mailbox.spring.MailboxInitializer" init-method="init">
+        <constructor-arg index="0" ref="sessionProvider" />
+        <constructor-arg index="1" ref="event-bus" />
+        <constructor-arg index="2" ref="indexer" />
+        <constructor-arg index="3" ref="quotaUpdater" />
+        <constructor-arg index="4" ref="mailboxmanager" />
+        <constructor-arg index="5" ref="messageMapperFactory" />
+    </bean>
+
+
+    <bean id="preDeletionHooks" class="org.apache.james.mailbox.store.PreDeletionHooks">
+        <constructor-arg index="0"><set/></constructor-arg>
+        <constructor-arg index="1" ref="metricFactory" />
+    </bean>
+</beans>

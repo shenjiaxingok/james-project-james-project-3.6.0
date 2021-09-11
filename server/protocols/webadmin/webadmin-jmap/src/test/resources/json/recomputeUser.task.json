@@ -1,0 +1,7 @@
+{
+  "type":"RecomputeUserFastViewProjectionItemsTask",
+  "username": "bob",
+  "runningOptions": {
+    "messagesPerSecond":2
+  }
+}

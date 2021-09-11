@@ -1,0 +1,14 @@
+{
+  "type": "deleted-messages-restore",
+  "userToRestore": "james",
+  "query": {
+    "combinator": "and",
+    "criteria": [
+      {
+        "fieldName": "hasAttachment",
+        "operator": "equals",
+        "value": "true"
+      }
+    ]
+  }
+}

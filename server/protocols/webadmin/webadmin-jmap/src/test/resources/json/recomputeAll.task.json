@@ -1,0 +1,6 @@
+{
+  "type":"RecomputeAllFastViewProjectionItemsTask",
+  "runningOptions": {
+    "messagesPerSecond":2
+  }
+}

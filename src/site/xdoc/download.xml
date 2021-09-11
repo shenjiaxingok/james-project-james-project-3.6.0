@@ -1,0 +1,605 @@
+<?xml version="1.0"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.    
+-->
+<document>
+
+  <properties>
+    <author email="server-dev@james.apache.org">Apache James Mail Server Project</author>
+    <title>Download</title>
+  </properties>
+  
+<body>
+  <section name='Cryptography'>
+  
+    <div class="ui-widget">
+      <div class="ui-priority-secondary ui-corner-all apache-james-crypto-notice">
+      <p> <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+Some distributions include cryptographic software. The country in which you currently reside may have restrictions on the import, possession, use, 
+and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check your country's laws, 
+regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted. 
+See <a href='http://www.wassenaar.org/'>http://www.wassenaar.org</a> for more information.
+</p><p>
+The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS), 
+has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1, which includes information security software using or performing cryptographic 
+functions with asymmetric algorithms. The form and manner of this Apache Software Foundation distribution makes it eligible for export 
+under the License Exception ENC Technology Software Unrestricted (TSU) exception (see the BIS Export Administration Regulations, Section 740.13) 
+for both object code and source code.
+</p><p>
+More specific details are included below. Export control information for the <a href='https://www.apache.org' rel='tag'>Apache Software Foundation</a>
+is found <a href='https://www.apache.org/licenses/exports/'>here</a>.
+</p>
+      </div>
+    </div>
+  </section>
+  <section name="Downloading">
+  
+    <p>Use the links below to download the product from one of
+       our mirrors.  You <strong>must</strong>&#160;<a href="#Verify_the_integrity_of_the_files">verify the
+       integrity</a> of the downloaded files using signatures downloaded from
+       our main distribution directory.</p>
+    
+    <p>Only current recommended releases are available on the main
+       distribution site and its mirrors.  Older releases are available from
+       the <a href="https://downloads.apache.org/james/">archive download
+       site.</a></p>
+    
+    <ul>
+      <li><a href='#Apache_James_Server'>Apache James Server</a></li>
+      <li><a href='#Apache_Mime4J'>Apache James Mime4j</a></li>
+      <li><a href='#Apache_jSPF'>Apache James jSPF</a></li>
+      <li><a href='#Apache_jDKIM'>Apache James jDKIM</a></li>
+      <li><a href='#Apache_JSieve'>Apache James JSieve</a></li>
+      <li><a href='#Apache_Mailet'>Apache James Mailet</a></li>
+      <li><a href='#Apache_Mailet_Base'>Apache James Mailet Base</a></li>
+      <li><a href='#Apache_Crypto_Mailets'>Apache James Crypto Mailets</a></li>
+      <li><a href='#Apache_James_Protocols'>Apache James Protocols</a></li>
+      <li><a href='#Apache_MPT'>Apache James MPT</a></li>
+      <li><a href='#Apache_HUPA'>Apache James Hupa</a></li>
+      <li>Apache MailetDoc Plugin for Maven is available from the standard Maven repositories (*)</li>
+    </ul>
+ 
+    <p>(*) James maven repositories can be found on 
+    <a href="https://repo1.maven.org/maven2/org/apache/james/">https://repo1.maven.org/maven2/org/apache/james/</a>.</p>
+  
+    <subsection name="Mirror">
+    
+      <p>[if-any logo]
+      <a href="[link]"><img align="right" src="[logo]" border="0" /></a>[end]
+      The currently selected mirror is <b>[preferred]</b>.  If you encounter a
+      problem with this mirror, please select another mirror.  If all
+      mirrors are failing, there are <i>backup</i> mirrors (at the end of
+      the mirrors list) that should be available.</p>
+      
+      <form action="[location]" method="get" id="SelectMirror">
+      Other mirrors: <select name="Preferred">
+      [if-any http]
+        [for http]<option value="[http]">[http]</option>[end]
+      [end]  
+      [if-any ftp]
+        [for ftp]<option value="[ftp]">[ftp]</option>[end]
+      [end]
+      [if-any backup]
+        [for backup]<option value="[backup]">[backup] (backup)</option>[end]
+      [end]
+      </select>
+      <input type="submit" value="Change" />     
+      </form>
+      
+      <p>You may also consult the <a href="https://www.apache.org/mirrors/">complete
+      list of mirrors</a>.</p>
+      
+      </subsection>
+      <subsection name="Verify the integrity of the files">
+      
+      <p>It is essential that you verify the integrity of the downloaded
+      files using the PGP or SHA-1 signatures.</p>
+      
+      <p>The PGP signatures can be verified using PGP or GPG.  First
+      download the <a href="https://downloads.apache.org/james/KEYS">KEYS</a>
+      as well as the <code>asc</code> signature file for the particular
+      distribution.  Make sure you get these files from the <a
+      href="https://downloads.apache.org/james/">main distribution
+      directory</a>, rather than from a mirror. Then verify the signatures
+      using</p>
+      
+      <p><code>
+      % pgpk -a KEYS<br />
+      % pgpv james-<i>version</i>.tar.gz.asc<br />
+      </code>
+      <em>or</em><br />
+      <code>
+      % pgp -ka KEYS<br />
+      % pgp james-<i>version</i>.tar.gz.asc<br />
+      </code>
+      <em>or</em><br />
+      <code>
+      % gpg --import KEYS<br />
+      % gpg --verify james-<i>version</i>.tar.gz.asc james-<i>version</i>.tar.gz
+      </code></p>
+    
+    </subsection>
+
+  </section>
+
+  <section name='Apache James Server'>
+
+    <subsection name="Apache James 3.6.0 is the stable version">
+
+      <div class="ui-widget">
+        <div class="ui-priority-secondary ui-corner-all apache-james-crypto-notice">
+          <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+            Apache James Server 3 uses third party cryptography software
+            including
+          </p>
+          <ul>
+            <li><code>bcmail</code> and <code>bcprov</code> libraries by "The Legion of the Bouncy
+              Castle" <a href='http://www.bouncycastle.org'>http://www.bouncycastle.org</a>,</li>
+            <li><code>jasypt</code> library by "Jasypt.org" <a href='http://www.jasypt.org/'>http://www.jasypt.org/</a></li>
+            <li>and the <a href='http://www.java.com/'>Java Runtime Environment</a>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <ul>
+        <li>Source code (ZIP Format):
+          <a href="https://www.apache.org/dyn/closer.lua/james/server/3.6.0/james-project-3.6.0-source-release.zip">james-project-3.6.0-source-release.zip</a>
+          [<a href="https://downloads.apache.org/james/server/3.6.0/james-project-3.6.0-source-release.zip.sha256">SHA-512</a>]
+          [<a href="https://downloads.apache.org/james/server/3.6.0/james-project-3.6.0-source-release.zip.asc">PGP</a>]</li>
+
+        <li>Binary (ZIP Format) for Spring wiring:
+          <a href="https://www.apache.org/dyn/closer.lua/james/server/3.6.0/james-server-app-3.6.0-app.zip">apache-james-3.6.0-app.zip</a>
+          [<a href="https://downloads.apache.org/james/server/3.6.0/james-server-app-3.6.0-app.zip.sha256">SHA-512</a>]
+          [<a href="https://downloads.apache.org/james/server/3.6.0/james-server-app-3.6.0-app.zip.asc">PGP</a>]
+        </li>
+
+      </ul>
+
+    </subsection>
+    
+    <subsection name="Apache James 2.3.2.1 is the previous stable version">
+    
+      <p>This release has many enhancements and bug fixes over the previous
+      release.  See the <a
+      href="https://james.apache.org/server/2/release-notes.html">Release Notes</a>
+      for a detailed list of changes.  Some of the earlier defects could
+      turn a James mail server into an Open Relay and allow files to be written on disk.  All users of James Server are urged to upgrade to version v2.3.2.1 as soon as
+      possible.</p>
+
+      <div class="ui-widget">
+        <div class="ui-priority-secondary ui-corner-all apache-james-crypto-notice">
+          <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+            Apache James Server 2 uses third party cryptography software
+            including
+          </p>
+          <ul>
+            <li><code>bcmail</code> by "The Legion of the Bouncy
+              Castle" <a href='https://www.bouncycastle.org'>https://www.bouncycastle.org</a>,</li>
+            <li>and the <a href='https://www.java.com/'>Java Runtime Environment</a>.</li>
+          </ul>
+        </div>
+      </div>
+              
+      <ul>
+
+        <li>Source (Unix TAR): <a href="[preferred]/james/server/james-2.3.2.1-src.tar.gz">james-2.3.2.1-src.tar.gz</a>
+          [<a href="https://downloads.apache.org/james/server/james-2.3.2.1-src.tar.gz.sha1">SHA-1</a>]
+          [<a href="https://downloads.apache.org/james/server/james-2.3.2.1-src.tar.gz.asc">PGP</a>]
+        </li>
+
+        <li>Source (ZIP Format): <a href="[preferred]/james/server/james-2.3.2.1-src.zip">james-2.3.2.1-src.zip</a>
+          [<a href="https://downloads.apache.org/james/server/james-2.3.2.1-src.zip.sha1">SHA-1</a>]
+          [<a href="https://downloads.apache.org/james/server/james-2.3.2.1-src.zip.asc">PGP</a>]
+        </li>
+      
+        <li>Binary (Unix TAR): <a href="[preferred]/james/server/james-binary-2.3.2.1.tar.gz">james-binary-2.3.2.1.tar.gz</a>
+          [<a href="https://downloads.apache.org/james/server/james-binary-2.3.2.1.tar.gz.sha1">SHA-1</a>]
+          [<a href="https://downloads.apache.org/james/server/james-binary-2.3.2.1.tar.gz.asc">PGP</a>]
+        </li>
+      
+        <li>Binary (ZIP Format): <a href="[preferred]/james/server/james-binary-2.3.2.1.zip">james-binary-2.3.2.1.zip</a>
+          [<a href="https://downloads.apache.org/james/server/james-binary-2.3.2.1.zip.sha1">SHA-1</a>]
+          [<a href="https://downloads.apache.org/james/server/james-binary-2.3.2.1.zip.asc">PGP</a>]
+        </li>
+      
+      </ul>
+    
+    <subsection name="Earlier Releases">
+    
+      <p>Are now <a href='https://downloads.apache.org/james/server'>archived</a></p>
+
+    </subsection>
+
+  </subsection>
+
+  </section>
+
+  <section name="Apache Mime4J">
+  
+    <p>Apache Mime4J 0.8.3 is the latest stable version.</p>
+
+    <p>Sources:
+      <a href="https://www.apache.org/dyn/closer.lua/james/mime4j/0.8.3/james-mime4j-sources-0.8.3.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/james-mime4j-sources-0.8.3.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/james-mime4j-sources-0.8.3.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can directly use the core library with maven:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mime4j-core&lt;/artifactId&gt;
+    &lt;version&gt;0.8.3&lt;/version&gt;
+  &lt;/dependency&gt;
+     </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/mime4j/0.8.3/apache-mime4j-core-0.8.3.jar">(Jar)</a>
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/apache-mime4j-core-0.8.3.jar.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/apache-mime4j-core-0.8.3.jar.asc">PGP</a>]
+      </p>
+
+    <p>In order to use Mime-4j DOM:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mime4j-dom&lt;/artifactId&gt;
+    &lt;version&gt;0.8.3&lt;/version&gt;
+  &lt;/dependency&gt;
+     </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/mime4j/0.8.3/apache-mime4j-dom-0.8.3.jar">(Jar)</a>
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/apache-mime4j-dom-0.8.3.jar.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/apache-mime4j-dom-0.8.3.jar.asc">PGP</a>]
+    </p>
+
+    <p>An aggregator project is also available:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mime4j&lt;/artifactId&gt;
+    &lt;version&gt;0.8.3&lt;/version&gt;
+  &lt;/dependency&gt;
+     </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/mime4j/0.8.3/apache-mime4j-0.8.3-bin.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/apache-mime4j-0.8.3-bin.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/mime4j/0.8.3/apache-mime4j-0.8.3-bin.zip.asc">PGP</a>]
+    </p>
+  
+  </section>
+
+  <section name="Apache jSPF">
+  
+    <p>Apache James jSPF 1.0.1 is the latest jSPF stable version.</p>
+
+    <p>Sources:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jspf/1.0.1/apache-jspf-sources-1.0.1.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/jspf/1.0.1/apache-jspf-sources-1.0.1.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jspf/1.0.1/apache-jspf-sources-1.0.1.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can directly use it with maven:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james.jspf&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-jspf&lt;/artifactId&gt;
+    &lt;version&gt;1.0.1&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jspf/1.0.1/apache-jspf-1.0.1-bin.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/jspf/1.0.1/apache-jspf-1.0.1-bin.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jspf/1.0.1/apache-jspf-1.0.1-bin.zip.asc">PGP</a>]
+    </p>
+  
+  </section>
+  
+  <section name="Apache jDKIM">
+  
+    <p>Apache James jDKIM 0.2 is the latest jDKIM stable version.</p>
+
+    <p>Sources:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jdkim/apache-jdkim-project-0.2-source-release.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/jdkim/apache-jdkim-project-0.2-source-release.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jdkim/apache-jdkim-project-0.2-source-release.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can directly use it with maven:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james.jdkim&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-jdkim&lt;/artifactId&gt;
+    &lt;version&gt;0.2&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jdkim/apache-jdkim-0.2-bin.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/jdkim/apache-jdkim-0.2-bin.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jdkim/apache-jdkim-0.2-bin.zip.asc">PGP</a>]
+    </p>
+  
+  </section>
+  
+  <section name="Apache JSieve">
+  
+    <p>Apache JSieve 0.7 is the latest stable version.</p>
+
+    <p>Sources:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jsieve/0.7/apache-jsieve-sources-0.7.zip">(Zip)</a>
+      [<a href="https://downloads.apache.org/james/jsieve/0.7/apache-jsieve-sources-0.7.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jsieve/0.7/apache-jsieve-sources-0.7.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can directly use it with maven:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-jsieve-core&lt;/artifactId&gt;
+    &lt;version&gt;0.7&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jsieve/0.7/apache-jsieve-core-0.7.jar">(Jar)</a>
+      [<a href="https://downloads.apache.org/james/jsieve/0.7/apache-jsieve-core-0.7.jar.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jsieve/0.7/apache-jsieve-core-0.7.jar.asc">PGP</a>]
+    </p>
+
+    <p>An aggregator project is also available:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-jsieve-all&lt;/artifactId&gt;
+    &lt;version&gt;0.7&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://www.apache.org/dyn/closer.lua/james/jsieve/0.7/apache-jsieve-0.7-all.tar.gz">(Tar Gz)</a>
+      [<a href="https://downloads.apache.org/james/jsieve/0.7/apache-jsieve-0.7-all.tar.gz.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/jsieve/0.7/apache-jsieve-0.7-all.tar.gz.asc">PGP</a>]
+    </p>
+
+  
+  </section>
+
+  <section name="Apache Mailet">
+  
+    <p>Apache Mailet 3.6.0 is the latest stable version. </p>
+
+
+    <p>Sources:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-api/3.3.0/apache-mailet-api-3.6.0-sources.jar">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-api/3.3.0/apache-mailet-api-3.6.0-sources.jar.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-api/3.3.0/apache-mailet-api-3.6.0-sources.jar.asc">PGP</a>]
+    </p>
+
+    <p>You can use the mailet API using this maven dependency:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mailet-api&lt;/artifactId&gt;
+    &lt;version&gt;3.6.0&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-api/3.6.0/apache-mailet-api-3.6.0.jar.sha1">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-api/3.6.0/apache-mailet-api-3.6.0.jar.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-api/3.6.0/apache-mailet-api-3.6.0.jar.asc">PGP</a>]
+    </p>
+    
+  </section>
+
+  <section name="Apache Mailet Base">
+
+    <p>Apache Mailet Base 3.6.0 is the latest stable version.</p>
+
+    <p>Sources:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-base/3.6.0/apache-mailet-base-3.6.0-sources.zip">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-base/3.6.0/apache-mailet-base-3.6.0-sources.zip.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-base/3.6.0/apache-mailet-base-3.6.0-sources.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can use the mailet Base using this maven dependency:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mailet-base&lt;/artifactId&gt;
+    &lt;version&gt;3.6.0&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-base/3.6.0/apache-mailet-base-3.6.0.jar">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-base/3.6.0/apache-mailet-base-3.6.0.jar.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-base/3.6.0/apache-mailet-base-3.6.0.jar.asc">PGP</a>]
+    </p>
+
+  </section>
+
+  <section name="Apache Mailet Standard">
+
+    <p>Apache Mailet Standard 3.6.0 is the latest stable version. </p>
+
+    <p>Sources:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-standard/3.6.0/apache-mailet-standard-3.6.0-sources.zip">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-standard/3.6.0/apache-mailet-standard-3.6.0-sources.zip.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-standard/3.6.0/apache-mailet-standard-3.6.0-sources.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can use mailet Standard content using this maven dependency:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mailet-standard&lt;/artifactId&gt;
+    &lt;version&gt;3.6.0&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-standard/3.6.0/apache-mailet-standard-3.6.0.jar">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-standard/3.6.0/apache-mailet-standard-3.6.0.jar.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-standard/3.6.0/apache-mailet-standard-3.6.0.jar.asc">PGP</a>]
+    </p>
+
+  </section>
+
+  <section name="Apache Crypto Mailets">
+  
+    <p>Apache Crypto Mailets 3.6.0 is the latest stable version.</p>
+    
+  <div class="ui-widget">
+    <div class="ui-priority-secondary ui-corner-all apache-james-crypto-notice">
+      <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+        Apache Crypto Mailets 1 uses third party cryptography software
+        including
+      </p>
+      <ul>
+        <li><code>bcmail</code> by "The Legion of the Bouncy
+          Castle" <a href='http://www.bouncycastle.org'>http://www.bouncycastle.org</a>.</li>
+      </ul>
+    </div>
+  </div>
+
+    <p>Sources:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-crypto/3.6.0/apache-mailet-crypto-3.6.0-sources.zip">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-crypto/3.6.0/apache-mailet-crypto-3.6.0-sources.zip.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-crypto/3.6.0/apache-mailet-crypto-3.6.0-sources.zip.asc">PGP</a>]
+    </p>
+
+    <p>You can use Mailet Crypto content using this maven dependency:</p>
+
+    <pre>
+      <code>
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.apache.james&lt;/groupId&gt;
+    &lt;artifactId&gt;apache-mailet-crypto&lt;/artifactId&gt;
+    &lt;version&gt;3.6.0&lt;/version&gt;
+  &lt;/dependency&gt;
+      </code>
+    </pre>
+
+    <p>Direct download link:
+      <a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-crypto/3.6.0/apache-mailet-crypto-3.6.0.jar">(Jar)</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-crypto/3.6.0/apache-mailet-crypto-3.6.0.jar.sha1">SHA-1</a>]
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/apache-mailet-crypto/3.6.0/apache-mailet-crypto-3.6.0.jar.asc">PGP</a>]
+    </p>
+    
+  </section>
+
+  <section name="Apache James Protocols">
+  
+    <p>Apache James Protocols 3.6.0 is the latest stable version.</p>
+
+    <ul>
+      You can get the James implementation of various protocols using maven:
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-api/3.6.0">API</a></li>
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-netty/3.6.0">NETTY</a></li>
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-smtp/3.6.0">SMTP</a></li>
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-lmtp/3.6.0">LMTP</a></li>
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-imap/3.6.0">IMAP</a></li>
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-pop3/3.6.0">POP3</a></li>
+      <li><a href="https://repo1.maven.org/maven2/org/apache/james/protocols/protocols-managesieve/3.6.0">MANAGESIEVE</a></li>
+    </ul>
+  
+  </section>
+
+  <section name="Apache MPT">
+  
+    <p>Apache MPT 0.1 is the latest stable version:</p>
+    <ul>
+    
+    <li>Source (Unix TAR):
+      <a href="https://www.apache.org/dyn/closer.lua/james/mpt/0.1/apache-james-mpt-0.1-src.tar.gz">apache-james-mpt-0.1-src.tar.gz</a>
+      [<a href="https://downloads.apache.org/james/mpt/0.1/apache-james-mpt-0.1-src.tar.gz.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/mpt/0.1/apache-james-mpt-0.1-src.tar.gz.asc">PGP</a>]
+    </li>
+    
+    <li>Source (ZIP Format): <a href="https://www.apache.org/dyn/closer.lua/james/mpt/0.1/apache-james-mpt-0.1-src.zip">apache-james-mpt-0.1-src.zip</a>
+      [<a href="https://downloads.apache.org/james/mpt/0.1/apache-james-mpt-0.1-src.zip.sha1">SHA-1</a>]
+      [<a href="https://downloads.apache.org/james/mpt/0.1/apache-james-mpt-0.1-src.zip.asc">PGP</a>]
+    </li>
+    
+    <li>Jars (including source and javadocs) for the modules are distributed through the standard 
+    <a href='https://maven.apache.org'>Maven</a> repositories on <a href="https://repo1.maven.org/maven2/org/apache/james/">https://repo1.maven.org/maven2/org/apache/james/</a>.</li>
+    </ul>
+  
+  </section>
+
+  <section name="Apache HUPA">
+  
+    <p>Apache HUPA 0.0.2 is the latest stable version:</p>
+    <ul>
+
+      <li>Source (ZIP Format): <a
+              href="https://repo1.maven.org/maven2/org/apache/james/hupa/hupa-parent/0.0.2/hupa-parent-0.0.2-source-release.zip">hupa-parent-0.0.2-source-release.zip</a>
+        [<a href="https://repo1.maven.org/maven2/org/apache/james/hupa/hupa-parent/0.0.2/hupa-parent-0.0.2-source-release.zip.asc">PGP</a>]
+      </li>
+    
+    <li>Binary (Java WAR): <a href="https://repo1.maven.org/maven2/org/apache/james/hupa/hupa/0.0.2/hupa-0.0.2.war">hupa-0.0.2.war</a>
+      [<a href="https://repo1.maven.org/maven2/org/apache/james/hupa/hupa/0.0.2/hupa-0.0.2.war.asc">PGP</a>]
+    </li>
+    
+    <li>Jars (including source and javadocs) for the modules are distributed through the standard 
+    <a href='https://maven.apache.org'>Maven</a> repositories on <a href="https://repo1.maven.org/maven2/org/apache/james/hupa">https://repo1.maven.org/maven2/org/apache/james/hupa</a>.</li>
+    </ul>
+  
+  </section>
+
+</body>
+
+</document>

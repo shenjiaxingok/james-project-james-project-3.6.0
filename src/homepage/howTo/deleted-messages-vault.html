@@ -1,0 +1,325 @@
+---
+layout: howTo
+---
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied. See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<!-- Main -->
+<div id="main">
+
+    <!-- Introduction -->
+    <section id="intro" class="main special">
+        <div class="">
+            <div class="content align-left">
+                <header class="major">
+                    <h1>Deleted Messages Vault</h1>
+                </header>
+
+                <p>
+                    The goal of this document is to help you to understand better about this feature and to present you the following topics:
+                </p>
+
+                <ul>
+                    <li>What is Deleted Messages Vault ?</li>
+                    <li>How to setup James with Deleted Messages Vault</li>
+                    <li>Deleted Messages Vault administration</li>
+                    <li>Example: Starting James with enabled Deleted Messages Vault by docker compose</li>
+                </ul>
+
+                <header class="major">
+                    <h2>What is Deleted Messages Vault ?</h2>
+                </header>
+
+                <p>Deleted Messages Vault is a feature in James allowing you to:</p>
+                <ul>
+                    <li>retain users deleted messages for some time</li>
+                    <li>restore & export deleted messages by various criteria</li>
+                    <li>permanently delete some retained messages</li>
+                </ul>
+
+                <p>
+                    If the Deleted Messages Vault is enabled, when users delete their mails, and by that we mean when he tries
+                    to definitely delete them by emptying the trash, James will retain these mails into the Deleted Messages Vault.
+                    And only administrators can interact with this component via WebAdmin REST APIs.
+                </p>
+                <p>
+                    One useful use of that feature is to allow an administrator to restore some mails an user may have deleted by accident.
+                    However, mails are not retained forever as you have to configure a retention period before using it (with a one year retention by default if not defined).
+                    It's also possible to permanently delete a mail if needed.
+                </p>
+                <p>
+                    Deleted mails for exporting & restoring can be filtered via several criteria based on mail properties.
+                    At the moment, these are supported mail properties for filtering:
+                </p>
+                <ul>
+                    <li>deletion date (ISO-8601 Date String)
+                        <ul>
+                            <li>supports before or equals operator</li>
+                            <li>supports after or equals operator</li>
+                        </ul>
+                    </li>
+                    <li>delivery date (ISO-8601 Date String)
+                        <ul>
+                            <li>supports before or equals operator</li>
+                            <li>supports after or equals operator</li>
+                        </ul>
+                    </li>
+                    <li>recipients (List of strings)
+                        <ul>
+                            <li>supports contains operator</li>
+                        </ul>
+                    </li>
+                    <li>sender (String)
+                        <ul>
+                            <li>supports equal matching operator</li>
+                        </ul>
+                    </li>
+                    <li>has attachment (Boolean)
+                        <ul>
+                            <li>supports equal matching operator</li>
+                        </ul>
+                    </li>
+                    <li>origin mailboxes (List of strings)
+                        <ul>
+                            <li>supports contains matching operator</li>
+                        </ul>
+                    </li>
+                    <li>subject (String)
+                        <ul>
+                            <li>supports equal matching operator</li>
+                            <li>supports equal ignore case matching operator</li>
+                            <li>supports contains matching operator</li>
+                            <li>supports contains ignore case matching operator (with US locale)</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <header class="major">
+                    <h2>How to setup James with Deleted Messages Vault</h2>
+                </header>
+
+                <p>
+                    In this section, we will guide you to setup James with Deleted Messages Vault by following the steps below:
+                </p>
+                <ul>
+                    <li>Enable Deleted Messages Vault by configuring Pre Deletion Hooks</li>
+                    <li>Configuring your BlobStore</li>
+                    <li>Configuring the retention time for the Deleted Messages Vault</li>
+                </ul>
+
+                <header class="major">
+                    <h4>Enable Deleted Messages Vault by configuring Pre Deletion Hooks</h4>
+                </header>
+
+                <p>
+                    By default, you need to configure a Pre Deletion Hook to let James use it.
+                    Before deleting a mail in James, PreDeletionHooks will be triggered to execute all declared hooks. If all hook executions success, then James will process to delete that mail.
+                    There is already a DeletedMessageVaultHook in James, its job is to store deleted mails into Deleted Messages Vault. Thus, you need to configure this hook in listeners.xml configuration file.
+                </p>
+
+                <p>
+                    Sample DeletedMessageVaultHook configuration:
+                </p>
+                <pre><code>
+&lt;listeners&gt;
+    &lt;listener&gt;
+    ...
+    &lt;/listener&gt;
+    ...
+    &lt;preDeletionHook&gt;
+        &lt;class&gt;org.apache.james.vault.DeletedMessageVaultHook&lt;/class&gt;
+    &lt;/preDeletionHook&gt;
+&lt;/listeners&gt;
+                </code></pre>
+                <p>
+                    More details about configuration & example is at <a href="/server/config-listeners.html">Pre Deletion Hook Configuration</a>
+                </p>
+
+                <header class="major">
+                    <h4>Configuring your BlobStore</h4>
+                </header>
+
+                <p>
+                    The Deleted Messages Vault is using a BlobStore to store and manage the deleted messages. A BlobStore is a dedicated
+                    component to store blobs, non-indexable content. There is different implementations available for the BlobStore on top
+                    of Cassandra or file object storage services like Openstack Swift and AWS S3.
+                </p>
+
+                <p>
+                    Let's consider that we want to store those deleted messages into an Openstack Swift object storage. So the configuration
+                    in the blob.properties file should look similar to this:
+                </p>
+
+                <pre><code>
+implementation=s3
+objectstorage.namespace=james
+objectstorage.s3.endPoint=http://scality:8080/
+objectstorage.s3.region=eu-west-1
+objectstorage.s3.accessKeyId=accessKey1
+objectstorage.s3.secretKey=verySecretKey1
+                </code></pre>
+
+                <p>
+                    If you want to dig deeper into the subject, or use an other implementation, you can find more details about this at the
+                    <a href="/server/config-blobstore.html">BlobStore Configuration</a> page.
+                </p>
+
+                <header class="major">
+                    <h4>Configuring the retention time for the Deleted Messages Vault</h4>
+                </header>
+
+                <p>
+                    To do this, you have to create a configuration file <b>deletedMessageVault.properties</b>, then put it into the <b>conf</b> directory of James.
+                    There is only one available property you may want to configure at the moment:
+                </p>
+                <ul>
+                    <li>
+                        <b>retentionPeriod</b>: represent for the period deleted messages allowed to be stored in Deleted Messages Vault (default of one year).
+                    </li>
+                </ul>
+
+                <p>
+                    Example:
+                </p>
+                <pre><code>
+retentionPeriod=1y
+                </code></pre>
+                <p>
+                    More details about configuration & example can be found at
+                    <a href="/server/config-vault.html">Deleted Messages Vault Configuration</a>
+                </p>
+
+                <header class="major">
+                    <h2>Deleted Messages Vault administration</h2>
+                </header>
+
+                <p>
+                    These are supported WebAdmin features on top of Deleted Messages Vault.
+                    You can have a look at the WebAdmin Deleted Messages Vault documentation <a href="/server/manage-webadmin.html#Deleted_Messages_Vault">here</a>
+                </p>
+
+                <header class="major">
+                    <h4>WebAdmin Deleted Messages Vault exporting</h4>
+                </header>
+
+                <p>
+                    When the administrator needs to export some user's deleted messages, you are able to choose which exporting mechanism should be used.
+                    At the moment there are two available exporting mechanisms:
+                </p>
+
+                <ul>
+                    <li>
+                        <b>localFile</b>: This is a simple exporting mechanism. Through an export request, it retrieves deleted mails from Deleted Messages Vault,
+                        then store them as a zip file in James Server local file system. Then it sends a mail with the absolute path of exported file to the targeted mail address.
+                    </li>
+                    <li>
+                        <b>linshare</b>: Instead of exporting blobs to the local file system, using
+                        <a href="https://www.linshare.org/en/index.html">LinShare</a> helps you upload your blobs and people
+                        you have been sharing to can access those blobs by accessing the LinShare server and download them.
+                    </li>
+                </ul>
+
+                <p>
+                    You can configure which kind of export mechanism you want to use in James by specifying <b>blob.export.implementation</b> property in blob.properties configuration file.
+                    E.g:
+                </p>
+
+                <pre><code>
+blob.export.implementation=localFile
+                </code></pre>
+
+                <p>
+                    You can find more details about configuration & example at <a href="/server/config-blob-export.html">Blob Export Configuration</a> page
+                </p>
+
+                <header class="major">
+                    <h2>Example: Starting James with enabled Deleted Messages Vault by docker compose</h2>
+                </header>
+
+                <p>
+                    And now to sum up everything we have seen until now and put it into practice, we will take
+                    James cassandra-rabbitmq product for the example
+                </p>
+
+                <p>First, get the template cassandra-rabbitmq product configuration:</p>
+
+                <pre><code>
+$ git clone https://github.com/apache/james-project
+$ cp -rf james-project/dockerfiles/run/guice/cassandra-rabbitmq/destination/conf conf
+                </code></pre>
+
+                <p>Then create the keystore file in the conf/ directory with the default password <code>james72laBalle</code>
+
+                <pre><code>
+$ keytool -genkey -alias james -keyalg RSA -keystore conf/keystore
+                </code></pre>
+
+                <p>Second, modify deletedMessageVault.properties configuration file like in the previous example</p>
+
+                <p>Third, modify listeners.xml to configure DeletedMessageVaultHook by adding preDeletionHook section at previous paragraph</p>
+
+                <p>
+                    Fourth, modify blob.properties file to configure the BlobStore that will be used and the file exporting mechanism, like
+                    we saw previously as well.
+                </p>
+
+                <p>Fifth, we will create a local folder for holding data out of the container:</p>
+
+                <pre><code>
+$ mkdir var
+                </code></pre>
+
+                <p>Finally, starting a James Server by docker compose</p>
+
+                <p>Getting James docker-compose.yml</p>
+
+                <pre><code>
+$ wget https://raw.githubusercontent.com/apache/james-project/master/dockerfiles/run/docker-compose.yml
+                </code></pre>
+
+                <p>Add the following volumes for james service:</p>
+
+                <pre><code>
+volumes:
+  - $PWD/conf:/root/conf/
+  - $PWD/var:/root/var/
+                </code></pre>
+
+                <p>
+                    Then you can run it and you should have a James server with an enabled Deleted Messages Vault. You can then
+                    refer to <a href="/server/manage-webadmin.html">WebAdmin documentation</a> to create a few users, domains,
+                    mailboxes, and then connecting to it your favorite mail client to start sending messages between
+                    those users and deleting them.
+                </p>
+
+                <p>
+                    And finally you can check more specifically the <a href="/server/manage-webadmin.html#Deleted_Messages_Vault">WebAdmin Deleted Messages Vault documentation</a> to explore all the possibilities of the vault.
+                </p>
+
+            </div>
+
+            <footer class="major">
+                <ul class="actions align-center">
+                    <li><a href="index.html" class="button">go back to other how-tos</a></li>
+                </ul>
+            </footer>
+        </div>
+    </section>
+
+</div>

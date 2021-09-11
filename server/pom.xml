@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements. See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership. The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License. You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied. See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<!--
+    Tag order follows model description at http://maven.apache.org/ref/3.0.3/maven-model/maven.html
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.apache.james</groupId>
+        <artifactId>james-project</artifactId>
+        <version>3.6.0</version>
+    </parent>
+
+    <artifactId>james-server</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Apache James :: Server</name>
+    <description>Apache James Mail Server</description>
+    <url>http://james.apache.org/server/</url>
+    <inceptionYear>2002</inceptionYear>
+
+    <modules>
+        <module>app</module>
+
+        <module>blob</module>
+
+        <module>container/cli</module>
+        <module>container/cli-integration</module>
+        <module>container/core</module>
+        <module>container/filesystem-api</module>
+        <module>container/guice</module>
+        <module>container/lifecycle-api</module>
+        <module>container/mailbox-adapter</module>
+        <module>container/mailbox-jmx</module>
+        <module>container/metrics/metrics-es-reporter-v7</module>
+        <module>container/spring</module>
+        <module>container/util</module>
+
+        <module>data/data-api</module>
+        <module>data/data-cassandra</module>
+        <module>data/data-file</module>
+        <module>data/data-jdbc</module>
+        <module>data/data-jmap</module>
+        <module>data/data-jmap-cassandra</module>
+        <module>data/data-jpa</module>
+        <module>data/data-ldap</module>
+        <module>data/data-library</module>
+        <module>data/data-memory</module>
+
+        <module>dns-service/dnsservice-api</module>
+        <module>dns-service/dnsservice-dnsjava</module>
+        <module>dns-service/dnsservice-library</module>
+        <module>dns-service/dnsservice-test</module>
+
+        <module>mailet/dkim</module>
+        <module>mailet/integration-testing</module>
+        <module>mailet/mailetcontainer-api</module>
+        <module>mailet/mailetcontainer-camel</module>
+        <module>mailet/mailets</module>
+        <module>mailet/mock-smtp-server</module>
+        <module>mailet/remote-delivery-integration-testing</module>
+
+        <module>mailrepository/mailrepository-api</module>
+        <module>mailrepository/mailrepository-cassandra</module>
+        <module>mailrepository/mailrepository-memory</module>
+
+        <module>protocols/fetchmail</module>
+        <module>protocols/jmap</module>
+        <module>protocols/jmap-draft</module>
+        <module>protocols/jmap-draft-integration-testing</module>
+        <module>protocols/jmap-rfc-8621</module>
+        <module>protocols/jmap-rfc-8621-integration-tests</module>
+        <module>protocols/jwt</module>
+        <module>protocols/protocols-imap4</module>
+        <module>protocols/protocols-library</module>
+        <module>protocols/protocols-lmtp</module>
+        <module>protocols/protocols-managesieve</module>
+        <module>protocols/protocols-pop3</module>
+        <module>protocols/protocols-smtp</module>
+        <module>protocols/webadmin</module>
+        <module>protocols/webadmin-cli</module>
+        <module>protocols/webadmin-integration-test</module>
+
+        <module>queue/queue-activemq</module>
+        <module>queue/queue-api</module>
+        <module>queue/queue-file</module>
+        <module>queue/queue-jms</module>
+        <module>queue/queue-memory</module>
+        <module>queue/queue-rabbitmq</module>
+
+        <module>task/task-api</module>
+        <module>task/task-distributed</module>
+        <module>task/task-json</module>
+        <module>task/task-memory</module>
+
+        <module>testing</module>
+
+    </modules>
+
+    <properties>
+        <productName>Apache-James Mail Server</productName>
+    </properties>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.ops4j.pax.exam</groupId>
+                                        <artifactId>maven-paxexam-plugin</artifactId>
+                                        <versionRange>[1.2.4,)</versionRange>
+                                        <goals>
+                                            <goal>generate-config</goal>
+                                            <goal>generate-depends-file</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>

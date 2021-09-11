@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  james:
+    depends_on:
+      - elasticsearch
+      - cassandra
+      - tika
+      - rabbitmq
+      - swift
+    entrypoint: bash -c "java -Dworking.directory=/root/ -Dlogback.configurationFile=/root/conf/logback.xml -jar james-server.jar"
+    image: linagora/james-rabbitmq-project:latest
+    container_name: james
+    hostname: james.local
+    ports:
+      - "80:80"
+      - "25:25"
+      - "110:110"
+      - "143:143"
+      - "465:465"
+      - "587:587"
+      - "993:993"
+      - "8000:8000"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    environment:
+      - discovery.type=single-node
+
+  cassandra:
+    image: cassandra:3.11.10
+    ports:
+      - "9042:9042"
+
+  tika:
+    image: apache/tika:1.24
+
+  rabbitmq:
+    image: rabbitmq:3.8.1-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  swift:
+    image: linagora/openstack-keystone-swift:pike
+    ports:
+      - "5000:5000"
+      - "8080:8080"
+      - "35357:35357"
+
